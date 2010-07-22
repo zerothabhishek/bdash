@@ -1,0 +1,18 @@
+<p>
+  <b>Blog account username:</b>
+  <%=h @blog_account.blog_account_username %>
+</p>
+
+<p>
+  <b>Blog account password:</b>
+  <%=h "****" %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%=h @blog_account.user_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_blog_account_path(@blog_account) %> |
+<%= link_to 'Back', blog_accounts_path %>

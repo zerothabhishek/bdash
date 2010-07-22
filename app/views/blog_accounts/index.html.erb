@@ -1,0 +1,24 @@
+<h1>Listing blog_accounts</h1>
+
+<table>
+  <tr>
+    <th>Blog account username</th>
+    <th>Blog account password</th>
+    <th>User</th>
+  </tr>
+
+<% @blog_accounts.each do |blog_account| %>
+  <tr>
+    <td><%=h blog_account.blog_account_username %></td>
+    <td><%=h "****" %></td>
+    <td><%=h blog_account.user_id %></td>
+    <td><%= link_to 'Show', blog_account %></td>
+    <td><%= link_to 'Edit', edit_blog_account_path(blog_account) %></td>
+    <td><%= link_to 'Destroy', blog_account, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New blog_account', new_blog_account_path %>

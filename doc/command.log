@@ -1,0 +1,74 @@
+
+- sudo script/generate scaffold user email:string password:password
+The above is wrong but does not fail. There is no separate database field type for password. Hence the following migration -
+- sudo script/generate migration AddPasswordToUsers password:string
+- sudo script/generate scaffold post title:string content:text tags:string draft_flag:boolean
+- sudo script/generate scaffold blog blog_name:string
+- sudo script/generate scaffold blogAccount blog_account_username:string blog_account_password:string
+- sudo script/generate scaffold bdashPush push_comment:string
+
+setup associations -
+user has_many :posts	has_many :blog	has_many :blogAccount	has_many :bdashPushes
+post belongs_to :user	has_many :bdashPushes
+blog	belongs_to :user 	belongs_to :blogAccount
+blogAccount belongs_to :user 	has_many :blog
+bdashPush	belongs_to :user	belongs_to :post 	belongs_to :blog
+
+And run
+- sudo rake db:migrate
+
+The above association definitions and migrations don't create foreign keys. Should have added them during model (scaffold here) creation only. Now need a migration for this. Update: migration doesn't work (on obvious lines) for this.
+
+Created and destroyed a dummy scaffold -
+- sudo script/generate scaffold dummy name:string cont:text user:references
+- sudo script/destroy scaffold dummy
+
+Deleted the scaffolds for post, blog, blog_account, bdash_push
+
+Create the posts scaffold again, and the blog_account scaffold
+- sudo script/generate scaffold post title:string content:text tags:string draft_flag:boolean user:references
+- sudo script/generate scaffold blogAccount blog_account_username:string blog_account_password:string user:references 
+
+Create models for blog, bdash_push
+- sudo script/generate model blog blog_name:string user:references blogAccount:references
+- sudo script/generate model bdashPush push_comment:string user:references post:references blog:references
+
+And the associations again -
+
+user 			has_many :posts		has_many :blog				has_many :blogAccounts			has_many :bdashPushes
+blogAccount 	belongs_to :user 	has_many :blog
+blog 			belongs_to :user	belongs_to :blog_account	has_many :posts, :through => :bdashPush
+post 			belongs_to :user 	has_many :blogs, :through => :bdashPush
+bdashPush		belongs_to :user	belongs_to :post 			belongs_to :blog
+
+
+
+
+SOme links useful for this -
+http://code.google.com/apis/blogger/docs/1.0/developers_guide_js.html
+http://code.google.com/apis/blogger/code.html
+http://code.google.com/apis/accounts/docs/OAuth.html
+http://code.google.com/apis/gdata/articles/
+http://code.google.com/apis/gdata/
+http://code.google.com/apis/gdata/articles/gdata_on_rails.html
+http://code.google.com/apis/gdata/articles/using_ruby.html#authentication
+
+
+The most useful ones -
+http://code.google.com/apis/blogger/docs/1.0/developers_guide_python.html
+and
+http://code.google.com/apis/gdata/articles/gdata_on_rails.html
+
+
+
+heroku problem:
+steps followed:
+- create the .gitignore and .gems file
+- sudo git init
+- sudo git add .
+- sudo git commit -m "new app: first checkin"
+- sudo heroku create
+- sudo git push heroku master
+Warning: Permanently added the RSA host key for IP address '75.101.145.87' to the list of known hosts.
+Permission denied (publickey).
+fatal: The remote end hung up unexpectedly
