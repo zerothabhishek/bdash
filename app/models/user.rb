@@ -3,5 +3,5 @@ class User < ActiveRecord::Base
   has_many :blogs	
   has_many :blogAccounts
   has_many :bdashPushes
-
+  # ok.
 end
